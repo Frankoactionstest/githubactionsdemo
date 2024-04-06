@@ -40,6 +40,6 @@ jobs:
           run: terraform plan -var-file "./envvariables.tfvars"
 
         - name: Terraform Apply
-          if: github.ref == 'refs/heads/"main"' 
+          if: github.ref == 'refs/heads/main' 
           run: terraform apply -auto-approve
 
