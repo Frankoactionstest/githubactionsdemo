@@ -7,16 +7,16 @@ resource "azurerm_resource_group" "actionstest" {
   }
 }
 
-# Create DDOS Protection Plan
-resource "azurerm_network_ddos_protection_plan" "plan" {
-  name                = var.plan_name
-  resource_group_name = azurerm_resource_group.actionstest.name
-  location            = azurerm_resource_group.actionstest.location
-  tags = {
-    environment = var.environment
-    owner       = var.owner
-  }
-}
+# # Create DDOS Protection Plan
+# resource "azurerm_network_ddos_protection_plan" "plan" {
+#   name                = var.plan_name
+#   resource_group_name = azurerm_resource_group.actionstest.name
+#   location            = azurerm_resource_group.actionstest.location
+#   tags = {
+#     environment = var.environment
+#     owner       = var.owner
+#   }
+# }
 
 
 # Create Virtual Network and enabled DDOS protection
@@ -26,10 +26,10 @@ resource "azurerm_virtual_network" "test" {
   location            = azurerm_resource_group.actionstest.location
   resource_group_name = azurerm_resource_group.actionstest.name
 
-  ddos_protection_plan {
-    id     = azurerm_network_ddos_protection_plan.plan.id
-    enable = true
-  }
+  # ddos_protection_plan {
+  #   id     = azurerm_network_ddos_protection_plan.plan.id
+  #   enable = true
+  # }
   tags = {
     environment = var.environment
     owner       = var.owner
