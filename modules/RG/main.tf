@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "actionstest" {
 }
 
 resource "azurerm_storage_account" "example" {
-  name                     = "test2"
+  name                     = "test2torromenia"
   resource_group_name      = azurerm_resource_group.actionstest.name
   location                 = azurerm_resource_group.actionstest.location
   account_tier             = "Standard"
