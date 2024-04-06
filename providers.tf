@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "azurerm" {
-    key                  = "test.terraform.tfstate"
+    key                  = "test2.terraform.tfstate"
   }
   required_version = ">=0.12"
 }
