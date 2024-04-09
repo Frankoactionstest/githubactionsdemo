@@ -32,7 +32,7 @@ jobs:
         - name: Setup Terraform
           uses: hashicorp/setup-terraform@v2.0.3
           with:
-           terraform_version: 1.1.6
+           terraform_version: 1.7.5
 
         - name: Terraform Init
           run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"   
