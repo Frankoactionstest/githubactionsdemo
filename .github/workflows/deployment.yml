@@ -10,11 +10,11 @@ on:
 jobs:
   Plan_Dev:
     if: github.ref == 'refs/heads/Workingdirectory'
-    uses: Frankoactionstest/githubactionsdemo/actions/workflows/TF_Plan.yml@Workingdirectory
+    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@Workingdirectory
     with:
       path: modules/RG
       tf_vars_file: dev.tfvars
-      gh_environment: DEV
+      environment: DEV
     secrets:
       ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTIONID }}
@@ -25,11 +25,11 @@ jobs:
 
   Deploy_Dev:
     needs: Plan_Dev
-    uses: Frankoactionstest/githubactionsdemo/actions/workflows/TF_Apply.yml@Workingdirectory
+    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@Workingdirectory
     with:
       path: modules/RG
       tf_vars_file: dev.tfvars
-      gh_environment: DEV
+      environment: DEV
     secrets:
       ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTIONID }}
@@ -40,7 +40,7 @@ jobs:
 
   Plan_Uat:
     if: github.ref == 'refs/heads/main'
-    uses: Frankoactionstest/githubactionsdemo/actions/workflows/TF_Plan.yml@Workingdirectory
+    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@Workingdirectory
     with:
       path: modules/RG
       tf_vars_file: uat.tfvars
@@ -55,7 +55,7 @@ jobs:
 
   Deploy_Uat:
     needs: Plan_Uat
-    uses: Frankoactionstest/githubactionsdemo/actions/workflows/TF_Apply.yml@Workingdirectory
+    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@Workingdirectory
     with:
       path: modules/RG
       tf_vars_file: uat.tfvars
