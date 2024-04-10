@@ -12,7 +12,7 @@ jobs:
   Plan_Dev:
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@main
     with:
-      path: ./RG                   ## Path to terraform root module (Required)
+      path: RG                   ## Path to terraform root module (Required)
       tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
       tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)
       
@@ -29,7 +29,7 @@ jobs:
     needs: Plan_Dev
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@main
     with:
-      path: ./RG                   ## Path to terraform root module (Required)
+      path: RG                   ## Path to terraform root module (Required)
       tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
       tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)         
 
@@ -44,7 +44,7 @@ jobs:
   Plan_Uat:
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@main
     with:
-      path: ./RG
+      path: RG
       tf_vars_file: uat.tfvars
       tf_version: latest           
 
@@ -60,7 +60,7 @@ jobs:
     needs: [ Plan_Uat, Deploy_Dev]
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@main
     with:
-      path: ./RG
+      path: RG
       tf_vars_file: uat.tfvars      
 
     secrets:
