@@ -1,4 +1,5 @@
 name: "Deployment"
+
 on:
   push:
    branches: [ "main" ]
@@ -11,7 +12,7 @@ jobs:
   Plan_Dev:
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@main
     with:
-      path: modules/RG                   ## Path to terraform root module (Required)
+      path: RG                   ## Path to terraform root module (Required)
       tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
       tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)
     secrets:
@@ -26,9 +27,10 @@ jobs:
     needs: Plan_Dev
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@main
     with:
-      path: modules/RG                   ## Path to terraform root module (Required)
+      path: RG                   ## Path to terraform root module (Required)
       tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
-      gh_environment: DEV        ## GH Environment. Default=null - (Optional)
+      tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)      
+
     secrets:
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}             ## ARM Client ID 
       arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}     ## ARM Client Secret
@@ -40,8 +42,9 @@ jobs:
   Plan_Uat:
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@main
     with:
-      path: modules/RG
+      path: RG
       tf_vars_file: uat.tfvars
+      tf_version: latest       
 
     secrets:
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
@@ -52,11 +55,12 @@ jobs:
        
 
   Deploy_Uat:
-    needs: [Plan_Uat, Deploy_Dev]
+    needs: [ Plan_Uat, Deploy_Dev]
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@main
     with:
-      path: modules/RG
+      path: RG
       gh_environment: UAT
+      tf_vars_file: uat.tfvars      
 
     secrets:
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}

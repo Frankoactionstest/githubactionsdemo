@@ -13,7 +13,7 @@ on:
         required: false
         type: string
         default: latest
-      environment:
+      gh_environment:
         description: 'Specifies the GitHub deployment environment.'
         required: false
         type: string
@@ -43,7 +43,7 @@ on:
 jobs:
   apply-plan:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: ${{ inputs.gh_environment }}
     defaults:
       run:
         shell: bash
