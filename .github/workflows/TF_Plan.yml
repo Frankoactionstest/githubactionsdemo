@@ -12,7 +12,7 @@ on:
         required: false
         type: string
         default: latest
-      environment:
+      gh_environment:
         description: 'Specifies the GitHub deployment environment.'
         required: false
         type: string
@@ -21,14 +21,16 @@ on:
         description: 'Specifies the Terraform TFVARS file.'
         required: true
         type: string
-    secrets:
+      secrets:
         ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
+        required: true
+        type: string        
 
 
 jobs:
   build-plan:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
+    environment: ${{ inputs.gh_environment }}
     defaults:
       run:
         shell: bash
