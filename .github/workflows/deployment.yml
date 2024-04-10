@@ -15,6 +15,8 @@ jobs:
       path: RG                   ## Path to terraform root module (Required)
       tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
       tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)
+      
+      
     secrets:
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}             ## ARM Client ID 
       arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}     ## ARM Client Secret
@@ -29,7 +31,7 @@ jobs:
     with:
       path: RG                   ## Path to terraform root module (Required)
       tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
-      tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)      
+      tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)         
 
     secrets:
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}             ## ARM Client ID 
@@ -44,7 +46,7 @@ jobs:
     with:
       path: RG
       tf_vars_file: uat.tfvars
-      tf_version: latest       
+      tf_version: latest           
 
     secrets:
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
@@ -59,7 +61,6 @@ jobs:
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@main
     with:
       path: RG
-      gh_environment: UAT
       tf_vars_file: uat.tfvars      
 
     secrets:

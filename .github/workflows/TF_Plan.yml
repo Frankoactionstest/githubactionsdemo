@@ -13,11 +13,11 @@ on:
         required: false
         type: string
         default: latest
-      gh_environment:
-        description: 'Specifies the GitHub deployment environment.'
-        required: false
-        type: string
-        default: null
+    #   gh_environment:
+    #     description: 'Specifies the GitHub deployment environment.'
+    #     required: false
+    #     type: string
+    #     default: null
       tf_vars_file:
         description: 'Specifies the Terraform TFVARS file.'
         required: true
@@ -44,7 +44,7 @@ on:
 jobs:
   build-plan:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.gh_environment }}
+    # environment: ${{ inputs.gh_environment }}
     defaults:
       run:
         shell: bash
