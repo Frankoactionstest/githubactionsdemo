@@ -1,145 +1,9 @@
 name: "Deployment"
 on:
   push:
-    branches: [ "main" ]  
+   branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]   
-
-  workflow_dispatch:
-
-jobs:
-  Plan_Dev:
-    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@
-    with:
-      path: 02_Storage                   ## Path to terraform root module (Required)
-      tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
-      az_resource_group: Terraform-GitHub-Backend      ## AZ backend - AZURE Resource Group hosting terraform backend storage acc (Required)
-      az_storage_acc: tfgithubbackendsa    ## AZ backend - AZURE terraform backend storage acc (Required)
-      az_container_name: gh-terraform-deployments ## AZ backend - AZURE storage container hosting state files (Required)
-      tf_key: storage-dev                ## AZ backend - Specifies name that will be given to terraform state file and plan artifact (Required)
-      tf_vars_file: config-dev.tfvars    ## Terraform TFVARS (Required)
-      enable_TFSEC: true                 ## (Optional)  Enable TFSEC IaC scans (Private repo requires GitHub enterprise)
-    secrets:
-      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}             ## ARM Client ID 
-      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}     ## ARM Client Secret
-      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }} ## ARM Subscription ID
-      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}             ## ARM Tenant ID
-
-  Deploy_Dev:
-    needs: Plan_Dev
-    uses: Pwd9000-ML/Azure-Terraform-Deployments/.github/workflows/az_tf_apply.yml@master
-    with:
-      path: 02_Storage                   ## Path to terraform root module (Required)
-      tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
-      az_resource_group: Terraform-GitHub-Backend      ## AZ backend - AZURE Resource Group hosting terraform backend storage acc (Required)
-      az_storage_acc: tfgithubbackendsa    ## AZ backend - AZURE terraform backend storage acc (Required)
-      az_container_name: gh-terraform-deployments ## AZ backend - AZURE storage container hosting state files (Required)
-      tf_key: storage-dev                ## AZ backend - Specifies name of the terraform state file and workflow artifact to download (Required)
-      gh_environment: Development        ## GH Environment. Default=null - (Optional)
-    secrets:
-      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}             ## ARM Client ID 
-      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}     ## ARM Client Secret
-      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }} ## ARM Subscription ID
-      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}             ## ARM Tenant ID
-
-  Plan_Uat:
-    permissions:   #Permission is required if enabling TFSEC == true
-      actions: read
-      contents: read
-      security-events: write
-    uses: Pwd9000-ML/Azure-Terraform-Deployments/.github/workflows/az_tf_plan.yml@master
-    with:
-      path: 02_Storage
-      az_resource_group: Terraform-GitHub-Backend
-      az_storage_acc: tfgithubbackendsa
-      az_container_name: gh-terraform-deployments
-      tf_key: storage-uat
-      tf_vars_file: config-uat.tfvars
-      enable_TFSEC: true                      
-    secrets:
-      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
-
-  Deploy_Uat:
-    needs: [Plan_Uat, Deploy_Dev]
-    uses: Pwd9000-ML/Azure-Terraform-Deployments/.github/workflows/az_tf_apply.yml@master
-    with:
-      path: 02_Storage
-      az_resource_group: Terraform-GitHub-Backend
-      az_storage_acc: tfgithubbackendsa
-      az_container_name: gh-terraform-deployments
-      tf_key: storage-uat
-      gh_environment: UserAcceptanceTesting
-    secrets:
-      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
-
-  Plan_Prod:
-    permissions:   #Permission is required if enabling TFSEC == true
-      actions: read
-      contents: read
-      security-events: write
-    uses: Pwd9000-ML/Azure-Terraform-Deployments/.github/workflows/az_tf_plan.yml@master
-    with:
-      path: 02_Storage
-      tf_version: latest
-      az_resource_group: Terraform-GitHub-Backend
-      az_storage_acc: tfgithubbackendsa
-      az_container_name: gh-terraform-deployments
-      tf_key: storage-prod
-      tf_vars_file: config-prod.tfvars
-      enable_TFSEC: true                       
-    secrets:
-      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
-
-  Deploy_Prod:
-    needs: [Plan_Prod, Deploy_Uat]
-    uses: Pwd9000-ML/Azure-Terraform-Deployments/.github/workflows/az_tf_apply.yml@master
-    with:
-      path: 02_Storage
-      az_resource_group: Terraform-GitHub-Backend
-      az_storage_acc: tfgithubbackendsa
-      az_container_name: gh-terraform-deployments
-      tf_key: storage-prod
-      gh_environment: Production
-    secrets:
-      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
-      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
-      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-name: "Deploy Resource Group"
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ] 
+   branches: [ "main" ]      
 
   workflow_dispatch:
 
@@ -147,172 +11,56 @@ jobs:
   Plan_Dev:
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@main
     with:
-      path: modules/RG
-      tf_vars_file: dev.tfvars
-      environment: DEV
+      path: modules/RG                   ## Path to terraform root module (Required)
+      tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
+      tf_vars_file: dev.tfvars    ## Terraform TFVARS (Required)
     secrets:
-      ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTIONID }}
-      RESOURCE_GROUP: ${{ secrets.DEV_RG }}
-      ARM_TENANT_ID: ${{ secrets.TENANTID }}
-      STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
-      CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}    
+      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}             ## ARM Client ID 
+      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}     ## ARM Client Secret
+      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }} ## ARM Subscription ID
+      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}             ## ARM Tenant ID
+      RESOURCE_GROUP: ${{ secrets.DEV_RG }}       
+
 
   Deploy_Dev:
     needs: Plan_Dev
     uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@main
     with:
-      path: modules/RG
-      tf_vars_file: dev.tfvars
-      gh_environment: DEV
-      secrets: 
-      arm_client_secret: ${{ secrets.SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTIONID }}
-      RESOURCE_GROUP: ${{ secrets.DEV_RG }}
-      ARM_TENANT_ID: ${{ secrets.TENANTID }}
-      STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
-      CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}      
+      path: modules/RG                   ## Path to terraform root module (Required)
+      tf_version: latest                 ## Terraform version e.g: 1.1.0 Default=latest (Optional)
+      gh_environment: DEV        ## GH Environment. Default=null - (Optional)
+    secrets:
+      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}             ## ARM Client ID 
+      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}     ## ARM Client Secret
+      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }} ## ARM Subscription ID
+      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}             ## ARM Tenant ID
+      RESOURCE_GROUP: ${{ secrets.DEV_RG }}       
+     
 
   Plan_Uat:
-    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@Workingdirectory
+    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Plan.yml@main
     with:
       path: modules/RG
       tf_vars_file: uat.tfvars
-      environment: UAT
+
     secrets:
-      ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTIONID }}
-      RESOURCE_GROUP: ${{ secrets.UAT_RG }}
-      ARM_TENANT_ID: ${{ secrets.TENANTID }}
-      STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
-      CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}      
+      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
+      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+      RESOURCE_GROUP: ${{ secrets.UAT_RG }}       
+       
 
   Deploy_Uat:
-    needs: Plan_Uat
-    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@Workingdirectory
+    needs: [Plan_Uat, Deploy_Dev]
+    uses: Frankoactionstest/githubactionsdemo/.github/workflows/TF_Apply.yml@main
     with:
       path: modules/RG
-      tf_vars_file: uat.tfvars
-      environment: UAT
+      gh_environment: UAT
+
     secrets:
-      ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTIONID }}
-      RESOURCE_GROUP: ${{ secrets.UAT_RG }}
-      ARM_TENANT_ID: ${{ secrets.TENANTID }}
-      STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
-      CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# name: 'CI using Terraform'
-
-# on:
-#   push:
-#     branches: [ "main" ]
-#   pull_request:
-#     branches: [ "main" ]
-
-#   workflow_dispatch:
-
-# jobs:
-#     terraform:
-#       name: 'Terraform'
-#       runs-on: ubuntu-latest
-#       env:
-#         ARM_CLIENT_ID: ${{ secrets.CLIENTID }}
-#         ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
-#         ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTIONID }}
-#         ARM_TENANT_ID: ${{ secrets.TENANTID }}
-#         STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
-#         CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}
-        
-#       defaults:
-#        run:
-#         shell: bash  
-
-#     DEV_Plan:
-#       name: 'Plan DEV'
-#       runs-on: ubuntu-latest
-#       needs: terraform
-#       with: 
-#         path: ./
-#       environment: 
-#         names: DEV
-#       env:
-#         RESOURCE_GROUP_NAME: ${{ secrets.DEV_RG }}        
-
-#       steps:
-#           - name: Checkout
-#             uses: actions/checkout@v4.1.1
-          
-#           - name: Setup Terraform
-#             uses: hashicorp/setup-terraform@v2.0.3
-#             with:
-#              terraform_version: 1.7.5
-
-#           - name: Terraform Init
-#             run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"   
-
-#           - name: Terraform Plan   
-#             run: terraform plan -var-file "./dev.tfvars" -out=tfplan -no-color
-
-#     UAT_Plan:
-#       name: 'Plan UAT'
-#       runs-on: ubuntu-latest      
-#       environment:
-#         name: UAT    
-#       env:
-#         RESOURCE_GROUP_NAME: ${{ secrets.DEV_RG }} 
-      
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4.1.1
-      
-#       - name: Setup Terraform
-#         uses: hashicorp/setup-terraform@v2.0.3
-#         with:
-#           terraform_version: 1.7.5
-
-#       - name: Terraform Init
-#         run: terraform init -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" -backend-config="container_name=$CONTAINER_NAME" -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"   
-
-#       - name: Terraform Plan   
-#         run: terraform plan -var-file "./dev.tfvars" -out=tfplan -no-color
-
-#   - name: Terraform Apply
-#         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#         run: terraform apply "tfplan"
+      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
+      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+      RESOURCE_GROUP: ${{ secrets.UAT_RG }}       

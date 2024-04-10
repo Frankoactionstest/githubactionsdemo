@@ -1,5 +1,6 @@
 ### Reusable workflow to download terraform artifact built by `az_tf_plan` and apply the artifact/plan ###
 name: "Apply_TF_Plan"
+
 on:
   workflow_call:
     inputs:
@@ -21,6 +22,22 @@ on:
         description: 'Specifies the Terraform TFVARS file.'
         required: true
         type: string
+    secrets:
+      arm_client_id:
+        description: 'Specifies the Azure ARM CLIENT ID.'
+        required: true
+      arm_client_secret:
+        description: 'Specifies the Azure ARM CLIENT SECRET.'
+        required: true
+      arm_subscription_id:
+        description: 'Specifies the Azure ARM SUBSCRIPTION ID.'
+        required: true          
+      arm_tenant_id:
+        description: 'Specifies the Azure ARM TENANT ID.'
+        required: true 
+      RESOURCE_GROUP:
+        description: 'Specifies the Azure ARM TENANT ID.'
+        required: true       
 
 
 jobs:
@@ -42,7 +59,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform init --backend-config="storage_account_name=$STORAGE_ACCOUNT" --backend-config="container_name=$CONTAINER_NAME" --backend-config="resource_group_name=$RESOURCE_GROUP"
       
       - name: Terraform Validate
         id: validate
@@ -50,12 +67,8 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan
-        # continue-on-error: true
-
-    #   - name: Terraform Plan Status
-    #     if: steps.plan.outcome == 'failure'
-    #     run: exit 1
+        run: terraform plan --var-file=$TF_VARS --out=plan.tfplan
+        continue-on-error: true
 
       - name: Terraform Apply
         run: terraform apply -auto-approve

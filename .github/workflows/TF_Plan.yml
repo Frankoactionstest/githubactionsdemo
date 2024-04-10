@@ -1,5 +1,6 @@
 ### Reusable workflow to plan terraform deployment, create artifact and upload to workflow artifacts for consumption ###
 name: "Build_TF_Plan"
+
 on:
   workflow_call:
     inputs:
@@ -21,10 +22,23 @@ on:
         description: 'Specifies the Terraform TFVARS file.'
         required: true
         type: string
-      secrets:
-        ARM_CLIENT_SECRET: ${{ secrets.SECRET }}
+    secrets:
+      arm_client_id:
+        description: 'Specifies the Azure ARM CLIENT ID.'
         required: true
-        type: string        
+      arm_client_secret:
+        description: 'Specifies the Azure ARM CLIENT SECRET.'
+        required: true
+      arm_subscription_id:
+        description: 'Specifies the Azure ARM SUBSCRIPTION ID.'
+        required: true
+      arm_tenant_id:
+        description: 'Specifies the Azure ARM TENANT ID.'
+        required: true
+      RESOURCE_GROUP:
+        description: 'Specifies the Azure ARM TENANT ID.'
+        required: true                             
+        
 
 
 jobs:
@@ -35,7 +49,14 @@ jobs:
       run:
         shell: bash
         working-directory: ${{ inputs.path }}
-        
+    env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+        STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
+        CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}        
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3.1.0
@@ -55,8 +76,8 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan
-        # continue-on-error: true
+        run: terraform plan --var-file=$TF_VARS --out=plan.tfplan
+        continue-on-error: true
 
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
