@@ -13,15 +13,32 @@ on:
         required: false
         type: string
         default: latest
-    #   gh_environment:
-    #     description: 'Specifies the GitHub deployment environment.'
-    #     required: false
-    #     type: string
-    #     default: null
+      gh_environment:
+        description: 'Specifies the GitHub deployment environment.'
+        required: false
+        type: string
+        default: null
       tf_vars_file:
         description: 'Specifies the Terraform TFVARS file.'
         required: true
         type: string
+      az_storage_acc:
+        description: 'Specifies the Azure Storage account container where backend Terraform state is hosted.'
+        required: true
+        type: string
+      az_container_name:
+        description: 'Specifies the Azure Storage account container where backend Terraform state is hosted.'
+        required: true
+        type: string
+      az_resource_group:
+        description: 'Specifies the Azure ARM TENANT ID.'
+        required: true 
+        type: string
+      enable_TFSEC:
+        description: '(Optional) Enables TFSEC IaC scans and code quality checks on Terraform configurations'
+        required: false
+        type: boolean
+        default: false
     secrets:
       arm_client_id:
         description: 'Specifies the Azure ARM CLIENT ID.'
@@ -35,6 +52,12 @@ on:
       arm_tenant_id:
         description: 'Specifies the Azure ARM TENANT ID.'
         required: true 
+      az_storage_acc:
+        description: 'Specifies the Azure Storage account container where backend Terraform state is hosted.'
+        required: true
+      az_container_name:
+        description: 'Specifies the Azure Storage account container where backend Terraform state is hosted.'
+        required: true
       RESOURCE_GROUP:
         description: 'Specifies the Azure ARM TENANT ID.'
         required: true       
@@ -43,7 +66,7 @@ on:
 jobs:
   apply-plan:
     runs-on: ubuntu-latest
-    # environment: ${{ inputs.gh_environment }}
+    environment: ${{ inputs.gh_environment }}
     defaults:
       run:
         shell: bash
