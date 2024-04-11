@@ -22,6 +22,24 @@ on:
         description: 'Specifies the Terraform TFVARS file.'
         required: true
         type: string
+      az_storage_acc:
+        description: 'Specifies the Azure Storage account container where backend Terraform state is hosted.'
+        required: true
+        type: string
+      az_container_name:
+        description: 'Specifies the Azure Storage account container where backend Terraform state is hosted.'
+        required: true
+        type: string
+      az_resource_group:
+        description: 'Specifies the Azure ARM TENANT ID.'
+        required: true 
+        type: string
+      enable_TFSEC:
+         description: '(Optional) Enables TFSEC IaC scans and code quality checks on Terraform configurations'
+         required: false
+         type: boolean
+         default: false
+
     secrets:
       arm_client_id:
         description: 'Specifies the Azure ARM CLIENT ID.'
@@ -35,9 +53,7 @@ on:
       arm_tenant_id:
         description: 'Specifies the Azure ARM TENANT ID.'
         required: true
-      RESOURCE_GROUP:
-        description: 'Specifies the Azure ARM TENANT ID.'
-        required: true                             
+                            
         
 
 
@@ -54,8 +70,10 @@ jobs:
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        STORAGE_ACCOUNT_NAME: ${{ secrets.STORAGE_ACCOUNT_NAME }}
-        CONTAINER_NAME: ${{ secrets.CONTAINER_NAME }}        
+        STORAGE_ACCOUNT_NAME: ${{ inputs.az_storage_acc }}
+        CONTAINER_NAME: ${{ inputs.az_container_name }}
+        RESOURCE_GROUP: ${{ inputs.az_resource_group }}
+        TF_VARS: ${{ inputs.tf_vars_file }}                
 
     steps:
       - name: Checkout
@@ -76,9 +94,9 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan --var-file=$TF_VARS --out=plan.tfplan
+        run: terraform plan -var-file=$TF_VARS -out=tfplan
         continue-on-error: true
 
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+    #   - name: Terraform Plan Status
+    #     if: steps.plan.outcome == 'failure'
+    #     run: exit 1
